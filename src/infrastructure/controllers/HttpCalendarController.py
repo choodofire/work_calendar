@@ -9,6 +9,15 @@ calendar_API = Blueprint('calendar', __name__)
 service = CalendarService(SqliteRepository())
 
 
+# Convert date to YYYY-mm-dd format
+def convert_to_iso_date(date_str) -> str:
+    try:
+        parsed_date = datetime.strptime(date_str, '%Y-%m-%d')
+        return parsed_date.strftime('%Y-%m-%d')
+    except ValueError:
+        raise ValueError('Invalid date format')
+
+
 @calendar_API.route('/calendar/create', methods=['POST'])
 def create_calendar():
     try:
@@ -70,6 +79,11 @@ def set_holiday():
                 or not isinstance(key, int) or key <= 0:
             raise ValueError()
 
+        if isinstance(date, str):
+            date = convert_to_iso_date(date)
+        elif isinstance(date, list):
+            date = [convert_to_iso_date(item) for item in date]
+
         result = service.set_holiday_in_dates(key, date)
         return jsonify({'dates': result}), 200
 
@@ -95,6 +109,11 @@ def unset_holiday():
                 or not isinstance(key, int) or key <= 0:
             raise ValueError()
 
+        if isinstance(date, str):
+            date = convert_to_iso_date(date)
+        elif isinstance(date, list):
+            date = [convert_to_iso_date(item) for item in date]
+
         result = service.unset_holiday_in_dates(key, date)
         return jsonify({'dates': result}), 200
 
@@ -116,6 +135,11 @@ def get_holiday():
         key = data['key']
         if not isinstance(date, str) or not isinstance(key, int) or key <= 0:
             raise ValueError()
+
+        if isinstance(date, str):
+            date = convert_to_iso_date(date)
+        elif isinstance(date, list):
+            date = [convert_to_iso_date(item) for item in date]
 
         result = service.get_flag_of_date(key, date)
         return jsonify({'holiday': result}), 200
@@ -139,6 +163,9 @@ def get_workdays_between():
         key = data['key']
         if not isinstance(start_date, str) or not isinstance(end_date, str) or not isinstance(key, int) or key <= 0:
             raise ValueError()
+
+        start_date = convert_to_iso_date(start_date)
+        end_date = convert_to_iso_date(end_date)
 
         start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
         end_date = datetime.strptime(end_date, "%Y-%m-%d").date()

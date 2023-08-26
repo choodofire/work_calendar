@@ -2,7 +2,7 @@
 
 ```bash
 # run SQLite 
-$ sh /dev/run_sqlite_interactive.sh
+$ sh dev/run_sqlite_interactive.sh
 
 # create tables
 $ C_TABLE=Calendars D_TABLE=Dates DB_NAME=calendar python dev/create_tables.py
@@ -30,9 +30,11 @@ $ gunicorn -b <HOST>:<PORT> src.wsgi:app
 
 # Http API
 
+Dates are stored in "YYYYYY-mm-dd" format
+
 Response code 400 and 500 return { 'error': str, 'message': str }
 
-The date will be submitted in format "2023-01-01"
+The date, start_date, end_date will be submitted in format "2023-01-01"
 
 | Method | Route             | Body                                        | Response 200                     | Description                                     |
 |--------|-------------------|---------------------------------------------|----------------------------------|-------------------------------------------------|
