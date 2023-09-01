@@ -1,16 +1,20 @@
+# work_calendar
+
+Service that provides preconfigured work calendar with http transport. 
+
 ## Dev scripts
 
 ```bash
 # run SQLite 
 $ sh dev/run_sqlite_interactive.sh
 
-# create tables
+# create tables ib BD
 $ C_TABLE=Calendars D_TABLE=Dates DB_NAME=calendar python dev/create_tables.py
 
-# clear tables
+# clear datas in tables
 $ DB_NAME=calendar python dev/clear_tables.py
 
-# init new calendar
+# init new calendar example
 $ C_TABLE=Calendars D_TABLE=Dates DB_NAME=calendar TITLE=RU KEY=100 YEAR=2023 python3 dev/create_tables.py
 ```
 
